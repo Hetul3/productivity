@@ -38,13 +38,19 @@ export default function LogForm() {
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    //problem with signIn
-    // e.preventDefault();
-    // const formData = new FormData(e.currentTarget);
-    // signIn('credentials', {
-    //     email: formData.get("email"),
-    //     password: formData.get("password"),
-    // })
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const response = await fetch(`/api/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: formData.get("email"),
+        password: formData.get("password"),
+      }),
+    });    
+
   };
   return (
     <form onSubmit={handleSubmit} style={formStyle}>

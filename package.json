@@ -10,20 +10,25 @@
   },
   "dependencies": {
     "@vercel/postgres": "^0.5.1",
+    "autoprefixer": "^10.4.16",
     "axios": "^1.6.5",
     "bcrypt": "^5.1.1",
     "next": "14.0.4",
     "next-auth": "^4.24.5",
+    "postcss": "^8.4.33",
     "react": "^18",
     "react-dom": "^18",
     "sass": "^1.69.7",
-    "sass-google-fonts": "^1.0.1"
+    "sass-google-fonts": "^1.0.1",
+    "tailwind": "^4.0.0",
+    "tailwindcss": "^3.4.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "jest": "^29.7.0",
     "typescript": "^5"
   }
 }

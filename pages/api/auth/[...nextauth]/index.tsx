@@ -9,10 +9,11 @@ const handler = NextAuth({
         password: { },
       },
       async authorize(credentials, req) {
-        console.log({credentials});
+        // console.log({credentials});
         return null;
       },
     }),
   ],
 });
 export {handler as GET, handler as POST};
+ 
