@@ -54,7 +54,7 @@ export default function Form() {
       const response = await fetch(`/api/auth/register`, {
         method: "GET",
         body: JSON.stringify({
-          email: formatData.get("email"),
+          email: formData.get("email"),
           password: formData.get("password"),
         }),
       });
