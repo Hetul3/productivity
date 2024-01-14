@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent } from "react";
+import React, { FormEvent, useState } from "react";
 
 type FlexDirection =
   | "row"
@@ -35,24 +35,54 @@ export default function Form() {
     cursor: "pointer",
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const [action, setAction] = useState<"register" | "login">("register");
+
+  const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const response = await fetch(`/api/auth/register`, {
+
+    if (action === "register") {
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         body: JSON.stringify({
           email: formData.get("email"),
           password: formData.get("password"),
         }),
       });
-    console.log({ response });
+      console.log({ response });
+    } else if (action === "login") {
+      const response = await fetch(`/api/auth/register`, {
+        method: "GET",
+        body: JSON.stringify({
+          email: formatData.get("email"),
+          password: formData.get("password"),
+        }),
+      });
+    }
   };
+
   return (
-    <form onSubmit={handleSubmit} style={formStyle}>
+    <form onSubmit={handleFormSubmit} style={formStyle}>
       <input name="email" type="email" style={inputStyle} placeholder="Email" />
-      <input name="password" type="password" style={inputStyle} placeholder="Password" />
-      <button type="submit" style={buttonStyle}>
+      <input
+        name="password"
+        type="password"
+        style={inputStyle}
+        placeholder="Password"
+      />
+      <button
+        type="submit"
+        style={buttonStyle}
+        onClick={() => setAction("register")}
+      >
         Register
+      </button>
+      <button
+        type="submit"
+        style={buttonStyle}
+        onClick={() => setAction("login")}
+      >
+        Login
       </button>
     </form>
   );
