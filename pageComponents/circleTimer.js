@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from "react";
-import { useClient } from 'next/client';
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 
 export default function TimerComponent() {
