@@ -33,16 +33,10 @@ export default function CommentsPage() {
     };
 
     try {
-      const userSession = await getSession();
-      console.log(userID);
-
-      const userID = userSession?.user?.name;
-
       const commentData = {
         commentId,
         comment,
         now,
-        userID,
       };
 
       const response = await fetch("/api/comments", {
@@ -66,21 +60,17 @@ export default function CommentsPage() {
     try {
       const userSession = await getSession();
       const userID = userSession?.user?.name;
-
       const response = await fetch(
         `/api/comments`,
         {
           method: "GET",
-          body: JSON.stringify({ userID }),
-            headers: {
-                "Content-Type": "application/json",
-            },
         }
       );
 
       if (response.ok) {
         const data = await response.json();
-        setCommentList(data);
+        const commentsArray = Array.isArray(data) ? data : [];
+        setCommentList(commentsArray);
         console.log(data);
       } else {
         console.error("Failed to fetch comments");
@@ -91,11 +81,8 @@ export default function CommentsPage() {
   };
 
   const handleDelete = async (commentId) => {
-    const userSession = await getSession();
-    const userID = userSession?.user?.name;
 
     const sendData = {
-      userID,
       commentId,
     };
 
@@ -115,11 +102,8 @@ export default function CommentsPage() {
   };
 
   const handleUpdate = async (commentId) => {
-    const userSession = await getSession();
-    const userID = userSession?.user?.name;
 
     const sendData = {
-      userID,
       commentId,
       updateText,
     };
@@ -147,7 +131,8 @@ export default function CommentsPage() {
     const commentToEdit = commentList.find(
       (comment) => comment.Id === commentId
     );
-    setUpdateText(commentToEdit.text);
+  setUpdateText(commentToEdit.text);
+
   };
 
   const handleCancelEdit = () => {

@@ -1,8 +1,13 @@
 import { sql } from "@vercel/postgres";
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
+import { useSession, getSession } from "next-auth/react";
+
+const userSession = await getSession();
+const userID = userSession?.user?.name;
 
 export async function POST(req, res) {
-  const { commentId, comment, now, userID } = JSON.parse(req.body);
+  const { commentData } = JSON.parse(req.body);
+  const { commentId, comment, now } = commentData;
 
   try {
     await sql`
@@ -16,8 +21,6 @@ export async function POST(req, res) {
 }
 
 export async function GET(req, res) {
-  const { userID } = req.body;
-
   try {
     const result = await sql`
       SELECT * FROM Comments WHERE User_name = ${userID};
@@ -31,7 +34,7 @@ export async function GET(req, res) {
 }
 
 export async function DELETE(req, res) {
-  const { userID, commentId } = JSON.parse(req.body);
+  const { commentId } = JSON.parse(req.body);
 
   try {
     await sql`
@@ -57,7 +60,6 @@ export async function PUT(req, res) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-
 
 //enter what the rest of the endpoint should be to make it work
 
@@ -122,4 +124,3 @@ export async function PUT(req, res) {
 //     return NextResponse.json({ error: error.message }, { status: 500 });
 //   }
 // }
-
