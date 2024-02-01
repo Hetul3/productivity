@@ -10,7 +10,7 @@ export async function POST(request) {
     // Insert user if it doesn't exist
     await sql`
         INSERT INTO Dbusers (Name) 
-        VALUES (${userName})
+        VALUES (testing)
         ON CONFLICT (Name) DO NOTHING;
       `;
   } catch (error) {

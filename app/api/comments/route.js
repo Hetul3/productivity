@@ -6,27 +6,34 @@ const userSession = await getSession();
 const userID = userSession?.user?.name;
 
 export async function POST(req, res) {
-  const { commentData } = JSON.parse(req.body);
-  const { commentId, comment, now } = commentData;
-
   try {
+    const userSession = await getSession();
+    const userID = userSession?.user?.name;
+    const commentData = await req.json();
+    console.log({commentData});
+    
+
     await sql`
-      INSERT INTO Comments (Id, Comment_text, User_name, Date_created)
-      VALUES (${commentId}, ${comment}, ${userID}, ${now});
+      INSERT INTO commentslist (Id, Comment_text, User_name)
+      VALUES (438902, ${commentText}, ${userID});
     `;
+    
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 export async function GET(req, res) {
-  try {
-    const result = await sql`
-      SELECT * FROM Comments WHERE User_name = ${userID};
-    `;
-    const comments = result.rows;
+  const session = await getSession({ req: req.next });
+  const userName = session?.user?.name;
 
+  try {
+    const result =
+      await sql`SELECT * FROM comments WHERE User_name = ${userName} ORDER BY Date_created DESC;`;
+    const comments = result.rows;
+    console.log(comments);
     return NextResponse.json({ comments }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -34,11 +41,12 @@ export async function GET(req, res) {
 }
 
 export async function DELETE(req, res) {
-  const { commentId } = JSON.parse(req.body);
+  const commentId = await req.query.commentId;
 
   try {
     await sql`
-      DELETE FROM Comments WHERE Id = ${commentId} AND User_name = ${userID};
+      DELETE FROM comments
+      WHERE Id = ${commentId} AND User_name = ${userID};
     `;
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
@@ -47,11 +55,11 @@ export async function DELETE(req, res) {
 }
 
 export async function PUT(req, res) {
-  const { userID, commentId, updateText } = JSON.parse(req.body);
+  const { userID, commentId, updateText } = await JSON.parse(req.body);
 
   try {
     await sql`
-      UPDATE Comments
+      UPDATE comments
       SET Comment_text = ${updateText}
       WHERE Id = ${commentId} AND User_name = ${userID};
     `;
@@ -61,66 +69,3 @@ export async function PUT(req, res) {
   }
 }
 
-//enter what the rest of the endpoint should be to make it work
-
-// export async function DELETE(req, res) {
-//   const commentId = req.query.commentId;
-
-//   try {
-//     await sql`
-//       DELETE FROM Comments
-//       WHERE Id = ${commentId};
-//     `;
-//     return NextResponse.json({ success: true }, { status: 200 });
-//   } catch (error) {
-//     return NextResponse.json({ error: error.message }, { status: 500 });
-//   }
-// }
-
-// export async function GET(req, res) {
-//   const session = await getSession({ req: req.next });
-//   const userName = session?.user?.name;
-
-//   try {
-//     const result =
-//       await sql`SELECT * FROM Comments WHERE User_name = ${userName} ORDER BY Date_created DESC;`;
-//     const comments = result.rows;
-//     console.log(comments);
-//     return NextResponse.json({ comments }, { status: 200 });
-//   } catch (error) {
-//     return NextResponse.json({ error: error.message }, { status: 500 });
-//   }
-// }
-
-// export async function POST(req, res) {
-//   const { commentData } = JSON.parse(req.body);
-//   const { comment, now, userID, commentId } = commentData;
-//   const session = await getSession({req: req.next});
-//   const userName = session?.user?.name;
-
-//   try {
-//     await sql`
-//       INSERT INTO Comments (Id, Comment_text, User_name, Date_created)
-//       VALUES (${commentId}, ${comment}, ${userName}, ${now});
-//     `;
-//     return NextResponse.json({ success: true }, { status: 200 });
-//   } catch (error) {
-//     return NextResponse.json({ error: error.message }, { status: 500 });
-//   }
-// }
-
-// export async function PUT(req, res) {
-//   const { text, date } = JSON.parse(req.body);
-//   const commentId = req.query.commentId;
-
-//   try {
-//     await sql`
-//       UPDATE Comments
-//       SET Comment_text = ${text}, Date_created = ${date}
-//       WHERE Id = ${commentId};
-//     `;
-//     return NextResponse.json({ success: true }, { status: 200 });
-//   } catch (error) {
-//     return NextResponse.json({ error: error.message }, { status: 500 });
-//   }
-// }
